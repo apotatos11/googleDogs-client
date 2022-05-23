@@ -9,10 +9,12 @@ import Home from "./Home";
 
 export default function App({ auth }) {
   const localStorageInfo = localStorage.getItem("googleDogsLoingInfo");
+
   const [loginUserInfo, setLogin] = useState(localStorageInfo);
+  console.log("App", loginUserInfo);
 
   const callApi = async () => {
-    axios.get("/api").then((res) => console.log(res));
+    axios.get("/api").then((res) => console.log("testServer", res));
   };
 
   const onLogout = async () => {

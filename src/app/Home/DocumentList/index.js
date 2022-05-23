@@ -20,11 +20,17 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
   const makeNewDocument = async () => {
     const uniqueId = nanoid();
 
+    const localStorageInfo = JSON.parse(
+      localStorage.getItem("googleDogsLoingInfo")
+    );
+
+    console.log("localStorage", localStorageInfo);
+
     const newDocument = {
       title: "제목 없음",
-      creator: localStorage.getItem("googleDogsLoingInfo"),
+      creator: localStorageInfo.email,
       contents: "테스트용 텍스트입니다.",
-      participants: [localStorage.getItem("googleDogsLoingInfo")],
+      participants: [localStorageInfo.email],
       createdAt: new Date(),
       url: process.env.REACT_APP_DOCUMENT_DB_URL + uniqueId,
     };
