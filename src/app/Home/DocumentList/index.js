@@ -33,6 +33,7 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
       participants: [localStorageInfo.email],
       createdAt: new Date(),
       url: process.env.REACT_APP_DOCUMENT_DB_URL + uniqueId,
+      id: uniqueId,
     };
 
     console.log(newDocument);
