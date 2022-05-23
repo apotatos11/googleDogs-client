@@ -8,14 +8,21 @@ import Login from "./Login";
 import Home from "./Home";
 
 export default function App({ auth }) {
-  const [isLoggedIn, setLogin] = useState(false);
+  const localStorageInfo = localStorage.getItem("googleDogsLoingInfo");
+  const [loginUserInfo, setLogin] = useState(localStorageInfo);
+
   const callApi = async () => {
     axios.get("/api").then((res) => console.log(res));
   };
 
   const onLogout = async () => {
-    await auth.logout().then(console.log);
-    setLogin(false);
+    try {
+      localStorage.removeItem("googleDogsLoingInfo");
+      await auth.logout().then(console.log);
+      setLogin(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -25,8 +32,8 @@ export default function App({ auth }) {
   return (
     <Container>
       <Reset />
-      {isLoggedIn && <Home onLogout={onLogout} />}
-      {!isLoggedIn && <Login auth={auth} setLogin={setLogin} />}
+      {loginUserInfo && <Home onLogout={onLogout} />}
+      {!loginUserInfo && <Login auth={auth} setLogin={setLogin} />}
     </Container>
   );
 }

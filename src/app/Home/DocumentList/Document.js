@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function Document({ onSetPage }) {
+export default function Document({ onSetDocument }) {
   return (
-    <Container onClick={onSetPage}>
+    <Container onClick={onSetDocument}>
       <main>본문 미리보기</main>
       <footer>
         <div>문서제목</div>

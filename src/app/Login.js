@@ -3,8 +3,10 @@ import styled from "styled-components";
 
 export default function Login({ auth, setLogin }) {
   const onLogin = async (e) => {
-    await auth.login(e.target.name).then(console.log);
-    setLogin(true);
+    const loginUser = await auth.login(e.target.name);
+    const { id, email } = loginUser.additionalUserInfo.profile;
+    localStorage.setItem("googleDogsLoingInfo", { id, email });
+    setLogin({ id, email });
   };
 
   return (

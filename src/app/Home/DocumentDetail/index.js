@@ -1,13 +1,18 @@
 import { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
 
-export default function DocumentDetail({ onSetPageNone, onLogout }) {
+export default function DocumentDetail({
+  currentDocument,
+  onSetCurrentDocumentNone,
+  onLogout,
+}) {
+  const { title, contents } = currentDocument;
   return (
     <Fragment>
       <DocumentDetailHeader>
-        <h1>제목</h1>
+        <h1>{title}</h1>
         <div>
-          <button type="button" onClick={onSetPageNone}>
+          <button type="button" onClick={onSetCurrentDocumentNone}>
             리스트로 돌아가기
           </button>
           <button type="button" onClick={onLogout}>
@@ -16,7 +21,7 @@ export default function DocumentDetail({ onSetPageNone, onLogout }) {
         </div>
       </DocumentDetailHeader>
       <DocumentDetailMain>
-        <p>Text를 채울 공간</p>
+        <p>{contents}</p>
       </DocumentDetailMain>
     </Fragment>
   );

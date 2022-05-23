@@ -6,30 +6,30 @@ import DocumentList from "./DocumentList";
 import DocumentDetail from "./DocumentDetail";
 
 export default function Home({ onLogout }) {
-  const [hasPageChosen, setPage] = useState("");
+  const [currentDocument, setCurrentDocument] = useState({});
 
-  const makeNewDocument = () => {
-    console.log("New Document");
+  const onSetCurrentDocument = (document) => {
+    setCurrentDocument(document);
   };
 
-  const onSetPage = () => {
-    console.log("Set Page");
-    setPage("title id");
-  };
-
-  const onSetPageNone = () => {
+  const onSetCurrentDocumentNone = (event) => {
     console.log("Page None");
-    setPage("");
+    setCurrentDocument({});
   };
 
-  if (!hasPageChosen)
+  if (!Object.keys(currentDocument).length)
     return (
       <DocumentList
-        makeNewDocument={makeNewDocument}
         onLogout={onLogout}
-        onSetPage={onSetPage}
+        onSetCurrentDocument={onSetCurrentDocument}
       />
     );
   else
-    return <DocumentDetail onSetPageNone={onSetPageNone} onLogout={onLogout} />;
+    return (
+      <DocumentDetail
+        currentDocument={currentDocument}
+        onSetCurrentDocumentNone={onSetCurrentDocumentNone}
+        onLogout={onLogout}
+      />
+    );
 }

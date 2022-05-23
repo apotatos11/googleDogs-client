@@ -1,9 +1,50 @@
 import { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { nanoid } from "nanoid";
 
 import Document from "./Document";
 
-export default function DocumentList({ makeNewDocument, onLogout, onSetPage }) {
+export default function DocumentList({ onLogout, onSetCurrentDocument }) {
+  const [documents, setDocuments] = useState([]);
+  const getDocuments = async () => {
+    axios
+      .get("api/documents")
+      .then((res) => {
+        console.log("Documents", res.data);
+        setDocuments(res.data);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const makeNewDocument = async () => {
+    const uniqueId = nanoid();
+
+    const newDocument = {
+      title: "제목 없음",
+      creator: localStorage.getItem("googleDogsLoingInfo"),
+      contents: "테스트용 텍스트입니다.",
+      participants: [localStorage.getItem("googleDogsLoingInfo")],
+      createdAt: new Date(),
+      url: process.env.REACT_APP_DOCUMENT_DB_URL + uniqueId,
+    };
+
+    console.log(newDocument);
+
+    axios
+      .post("api/document", newDocument)
+      .then((res) => {
+        console.log("document maiking success", res);
+      })
+      .catch((error) => console.error(error));
+
+    onSetCurrentDocument(newDocument);
+  };
+
+  useEffect(() => {
+    getDocuments();
+  }, []);
+
   return (
     <Fragment>
       <DocumentListHeader>
@@ -16,20 +57,20 @@ export default function DocumentList({ makeNewDocument, onLogout, onSetPage }) {
         </button>
       </DocumentListHeader>
       <DocumentListMain>
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
-        <Document onSetPage={onSetPage} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
+        <Document onSetCurrentDocument={onSetCurrentDocument} />
       </DocumentListMain>
     </Fragment>
   );
