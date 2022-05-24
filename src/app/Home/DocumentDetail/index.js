@@ -7,6 +7,7 @@ export default function DocumentDetail({
   currentDocument,
   onSetCurrentDocument,
   onSetCurrentDocumentNone,
+  setLoading,
   onLogout,
 }) {
   const { title, contents } = currentDocument;
@@ -21,7 +22,7 @@ export default function DocumentDetail({
     const updateInfo = { title: currentTitle };
     const titleChangedDocument = { ...currentDocument, title: currentTitle };
 
-    axios
+    await axios
       .patch(documentUrl, updateInfo)
       .then((res) => {
         console.log("Target Document", res.data);
@@ -32,30 +33,42 @@ export default function DocumentDetail({
   };
 
   const saveDocument = async () => {
-    const updateInfo = { title: currentTitle, contents: currentContents };
+    const updateInfo = {
+      title: currentTitle,
+      contents: currentContents,
+      lastModified: new Date(),
+    };
 
-    axios
-      .put(documentUrl, updateInfo)
-      .then((res) => {
-        console.log("Target Document", res.data);
-      })
+    await axios
+      .patch(documentUrl, updateInfo)
       .catch((error) => console.error(error));
   };
 
+  const deleteDocument = async () => {
+    console.log("delete1");
+    setLoading(true);
+    console.log("delete2");
+    await axios.delete(documentUrl).catch((error) => console.error(error));
+    console.log("delete3");
+
+    await onSetCurrentDocumentNone();
+    console.log("delete4");
+
+    setLoading(false);
+    console.log("delete5");
+  };
+
   useEffect(() => {
-    const job1 = schedule.scheduleJob("0 * * * * *", function () {
+    schedule.scheduleJob("0 * * * * *", function () {
       saveDocument();
-      console.log("0초 실행");
     });
 
-    const job2 = schedule.scheduleJob("20 * * * * *", function () {
+    schedule.scheduleJob("20 * * * * *", function () {
       saveDocument();
-      console.log("20초 실행");
     });
 
-    const job3 = schedule.scheduleJob("40 * * * * *", function () {
+    schedule.scheduleJob("40 * * * * *", function () {
       saveDocument();
-      console.log("40초 실행");
     });
 
     return () => schedule.gracefulShutdown();
@@ -76,6 +89,9 @@ export default function DocumentDetail({
         <div>
           <button type="button" onClick={saveDocument}>
             저장하기
+          </button>
+          <button type="button" onClick={() => deleteDocument()}>
+            삭제하기
           </button>
           <button type="button" onClick={onSetCurrentDocumentNone}>
             리스트로 돌아가기
@@ -102,7 +118,8 @@ const DocumentDetailHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0px 20px;
+  margin-right: 5px;
+  margin-left: 10px;
 
   form {
     height: 40px;

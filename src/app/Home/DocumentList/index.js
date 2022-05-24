@@ -1,22 +1,20 @@
-import { useState, useEffect, Fragment } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { nanoid } from "nanoid";
 
 import Document from "./Document";
 
-export default function DocumentList({ onLogout, onSetCurrentDocument }) {
-  const [documents, setDocuments] = useState([]);
-
-  const getDocuments = async () => {
-    axios
-      .get("api/documents")
-      .then((res) => {
-        console.log("Documents", res.data);
-        setDocuments(res.data);
-      })
-      .catch((error) => console.error(error));
-  };
+export default function DocumentList({
+  onLogout,
+  onSetCurrentDocument,
+  documents,
+  setLoading,
+  getDocuments,
+  setDocuments,
+  loginUserInfo,
+}) {
+  const [myListMode, setMyListMode] = useState(false);
 
   const makeNewDocument = async () => {
     const uniqueId = nanoid();
@@ -37,16 +35,23 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
       id: uniqueId,
     };
 
-    console.log(newDocument);
-
-    axios
+    await axios
       .post("api/document", newDocument)
       .then((res) => {
         console.log("document maiking success", res);
       })
       .catch((error) => console.error(error));
 
-    onSetCurrentDocument(newDocument);
+    const documentId = newDocument.id;
+    const documentUrl = process.env.REACT_APP_DOCUMENT_DB_URL + documentId;
+
+    await axios
+      .get(documentUrl)
+      .then((res) => {
+        console.log("Target Document", res.data);
+        onSetCurrentDocument(res.data);
+      })
+      .catch((error) => console.error(error));
   };
 
   const documentList =
@@ -64,24 +69,64 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
       <p>현재 저장된 문서가 없습니다.</p>
     );
 
-  useEffect(() => {
-    getDocuments();
-  }, []);
+  console.log("loginuserInfo", loginUserInfo);
 
-  return (
-    <Fragment>
-      <DocumentListHeader>
-        <button type="button" onClick={makeNewDocument}>
-          새 문서
-        </button>
-        <input type="search" placeholder=" 검색"></input>
-        <button type="button" onClick={onLogout}>
-          Logout
-        </button>
-      </DocumentListHeader>
-      <DocumentListMain>{documentList}</DocumentListMain>
-    </Fragment>
+  const loginUserEmail = loginUserInfo.email;
+  const myDocumentList = documents.filter(
+    (document) => document.creator === loginUserEmail
   );
+
+  const myListModeOff = () => {
+    setMyListMode(false);
+    getDocuments();
+  };
+
+  const myListModeOn = () => {
+    setMyListMode(true);
+    setDocuments(myDocumentList);
+  };
+
+  if (!myListMode) {
+    return (
+      <Fragment>
+        <DocumentListHeader>
+          <nav>
+            <button type="button" onClick={makeNewDocument}>
+              새 문서
+            </button>
+            <button type="button" onClick={myListModeOn}>
+              내 문서
+            </button>
+          </nav>
+          <input type="search" placeholder=" 검색"></input>
+          <button type="button" onClick={onLogout}>
+            Logout
+          </button>
+        </DocumentListHeader>
+        <DocumentListMain>{documentList}</DocumentListMain>
+      </Fragment>
+    );
+  } else {
+    return (
+      <Fragment>
+        <DocumentListHeader>
+          <nav>
+            <button type="button" onClick={makeNewDocument}>
+              새 문서
+            </button>
+            <button type="button" onClick={myListModeOff}>
+              전체 문서
+            </button>
+          </nav>
+          <input type="search" placeholder=" 검색"></input>
+          <button type="button" onClick={onLogout}>
+            Logout
+          </button>
+        </DocumentListHeader>
+        <DocumentListMain>{documentList}</DocumentListMain>
+      </Fragment>
+    );
+  }
 }
 
 const DocumentListHeader = styled.header`
@@ -90,10 +135,10 @@ const DocumentListHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0px 10px;
 
   button {
     height: 30px;
+    margin: 0px 5px;
   }
 
   input {

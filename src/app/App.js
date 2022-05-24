@@ -23,7 +23,9 @@ export default function App({ auth }) {
   return (
     <Container>
       <Reset />
-      {loginUserInfo && <Home onLogout={onLogout} />}
+      {loginUserInfo && (
+        <Home onLogout={onLogout} loginUserInfo={loginUserInfo} />
+      )}
       {!loginUserInfo && <Login auth={auth} setLogin={setLogin} />}
     </Container>
   );

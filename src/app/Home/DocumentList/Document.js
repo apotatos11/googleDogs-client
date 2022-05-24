@@ -14,7 +14,6 @@ export default function Document({
     axios
       .get(documentUrl)
       .then((res) => {
-        console.log("Target Document", res.data);
         onSetCurrentDocument(res.data);
       })
       .catch((error) => console.error(error));
