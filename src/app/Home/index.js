@@ -54,6 +54,7 @@ export default function Home({ onLogout, loginUserInfo }) {
         onSetCurrentDocument={onSetCurrentDocument}
         onLogout={onLogout}
         setLoading={setLoading}
+        loginUserInfo={loginUserInfo}
       />
     );
 }

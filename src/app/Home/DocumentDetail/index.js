@@ -14,6 +14,10 @@ export default function DocumentDetail({
   const documentId = currentDocument._id;
   const documentUrl = process.env.REACT_APP_DOCUMENT_DB_URL + documentId;
 
+  const currentUserEmail = JSON.parse(
+    localStorage.getItem("googleDogsLoingInfo")
+  ).email;
+
   const [currentTitle, setTitle] = useState(title);
   const [currentContents, setContents] = useState(contents);
 
@@ -90,9 +94,11 @@ export default function DocumentDetail({
           <button type="button" onClick={saveDocument}>
             저장하기
           </button>
-          <button type="button" onClick={() => deleteDocument()}>
-            삭제하기
-          </button>
+          {currentUserEmail === currentDocument.creator && (
+            <button type="button" onClick={() => deleteDocument()}>
+              삭제하기
+            </button>
+          )}
           <button type="button" onClick={onSetCurrentDocumentNone}>
             리스트로 돌아가기
           </button>

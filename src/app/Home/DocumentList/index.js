@@ -23,8 +23,6 @@ export default function DocumentList({
       localStorage.getItem("googleDogsLoingInfo")
     );
 
-    console.log("localStorage", localStorageInfo);
-
     const newDocument = {
       title: "제목 없음",
       creator: localStorageInfo.email,
@@ -69,11 +67,11 @@ export default function DocumentList({
       <p>현재 저장된 문서가 없습니다.</p>
     );
 
-  console.log("loginuserInfo", loginUserInfo);
-
-  const loginUserEmail = loginUserInfo.email;
+  const currentUserEmail = JSON.parse(
+    localStorage.getItem("googleDogsLoingInfo")
+  ).email;
   const myDocumentList = documents.filter(
-    (document) => document.creator === loginUserEmail
+    (document) => document.creator === currentUserEmail
   );
 
   const myListModeOff = () => {
