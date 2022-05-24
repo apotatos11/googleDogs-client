@@ -1,6 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
-import styled from "styled-components";
-import axios from "axios";
+import { useState } from "react";
 
 import DocumentList from "./DocumentList";
 import DocumentDetail from "./DocumentDetail";
@@ -13,6 +11,7 @@ export default function Home({ onLogout }) {
   };
 
   const onSetCurrentDocumentNone = (event) => {
+    event.preventDefault();
     console.log("Page None");
     setCurrentDocument({});
   };
@@ -29,6 +28,7 @@ export default function Home({ onLogout }) {
       <DocumentDetail
         currentDocument={currentDocument}
         onSetCurrentDocumentNone={onSetCurrentDocumentNone}
+        onSetCurrentDocument={onSetCurrentDocument}
         onLogout={onLogout}
       />
     );

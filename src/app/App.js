@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
 import { Reset } from "styled-reset";
 import styled from "styled-components";
-import axios from "axios";
 
 import Login from "./Login";
 import Home from "./Home";
