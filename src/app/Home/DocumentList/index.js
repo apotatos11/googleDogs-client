@@ -7,6 +7,7 @@ import Document from "./Document";
 
 export default function DocumentList({ onLogout, onSetCurrentDocument }) {
   const [documents, setDocuments] = useState([]);
+
   const getDocuments = async () => {
     axios
       .get("api/documents")
@@ -48,6 +49,21 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
     onSetCurrentDocument(newDocument);
   };
 
+  const documentList =
+    documents.length > 0 ? (
+      documents.map((document) => (
+        <Document
+          key={document._id}
+          title={document.title}
+          id={document._id}
+          onSetCurrentDocument={onSetCurrentDocument}
+          lastModified={new Date(`${document.lastModified}`).toLocaleString()}
+        />
+      ))
+    ) : (
+      <p>현재 저장된 문서가 없습니다.</p>
+    );
+
   useEffect(() => {
     getDocuments();
   }, []);
@@ -63,22 +79,7 @@ export default function DocumentList({ onLogout, onSetCurrentDocument }) {
           Logout
         </button>
       </DocumentListHeader>
-      <DocumentListMain>
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-        <Document onSetCurrentDocument={onSetCurrentDocument} />
-      </DocumentListMain>
+      <DocumentListMain>{documentList}</DocumentListMain>
     </Fragment>
   );
 }

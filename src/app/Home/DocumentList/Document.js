@@ -1,13 +1,32 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
-export default function Document({ onSetDocument }) {
+export default function Document({
+  title,
+  lastModified,
+  id,
+  onSetCurrentDocument,
+}) {
+  const getOneDocument = async () => {
+    const documentId = id;
+    const documentUrl = process.env.REACT_APP_DOCUMENT_DB_URL + documentId;
+
+    axios
+      .get(documentUrl)
+      .then((res) => {
+        console.log("Target Document", res.data);
+        onSetCurrentDocument(res.data);
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
-    <Container onClick={onSetDocument}>
+    <Container onClick={getOneDocument}>
       <main>본문 미리보기</main>
       <footer>
-        <div>문서제목</div>
-        <div>last Modified</div>
+        <div>{title}</div>
+        <div>{lastModified}</div>
       </footer>
     </Container>
   );

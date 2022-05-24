@@ -12,10 +12,6 @@ export default function App({ auth }) {
 
   const [loginUserInfo, setLogin] = useState(localStorageInfo);
 
-  const callApi = async () => {
-    axios.get("/api").then((res) => console.log("testServer", res));
-  };
-
   const onLogout = async () => {
     try {
       localStorage.removeItem("googleDogsLoingInfo");
@@ -25,10 +21,6 @@ export default function App({ auth }) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    callApi();
-  }, []);
 
   return (
     <Container>
