@@ -123,7 +123,7 @@ export default function DocumentList({
             Logout
           </button>
         </DocumentListHeader>
-        <DocumentListMain>{documentList}</DocumentListMain>
+        <MyDocumentListMain>{documentList}</MyDocumentListMain>
       </Fragment>
     );
   }
@@ -153,6 +153,17 @@ const DocumentListHeader = styled.header`
 
 const DocumentListMain = styled.main`
   background-color: aqua;
+  height: 93%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  overflow-y: scroll;
+  justify-items: center;
+  align-items: center;
+`;
+
+const MyDocumentListMain = styled.main`
+  background-color: aquamarine;
   height: 93%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
