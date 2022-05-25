@@ -7,7 +7,6 @@ import Home from "./Home";
 
 export default function App({ auth }) {
   const localStorageInfo = localStorage.getItem("googleDogsLoingInfo");
-
   const [loginUserInfo, setLogin] = useState(localStorageInfo);
 
   const onLogout = async () => {

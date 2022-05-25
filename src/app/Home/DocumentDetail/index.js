@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import schedule from "node-schedule";
@@ -16,7 +16,6 @@ export default function DocumentDetail({
   const { title, contents } = currentDocument;
   const documentId = currentDocument._id;
   const documentUrl = process.env.REACT_APP_DOCUMENT_DB_URL + documentId;
-
   const currentUserEmail = JSON.parse(
     localStorage.getItem("googleDogsLoingInfo")
   ).email;
@@ -24,7 +23,6 @@ export default function DocumentDetail({
   const [currentTitle, setTitle] = useState(title);
   const [currentContents, setContents] = useState(contents);
   const [otherPosition, setOtherPosition] = useState({});
-  const textareaRef = useRef();
 
   const titleSubmit = async (event) => {
     event.preventDefault();
@@ -51,6 +49,7 @@ export default function DocumentDetail({
     await axios
       .patch(documentUrl, updateInfo)
       .catch((error) => console.error(error));
+
     setTitle(currentTitle);
   };
 
@@ -81,6 +80,7 @@ export default function DocumentDetail({
     socket.on("otherPosition", (msg) => {
       const { userEmail, caret } = msg;
       const newObject = {};
+
       if (otherPosition[userEmail]) {
         const revisedPosition = { ...otherPosition };
         revisedPosition[userEmail] = caret;
@@ -145,7 +145,6 @@ export default function DocumentDetail({
       <DocumentDetailMain>
         <TextEditor>
           <textarea
-            ref={textareaRef}
             value={currentContents}
             autoComplete="off"
             onChange={onChangeHandler}
