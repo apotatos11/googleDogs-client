@@ -25,7 +25,6 @@ export default function DocumentDetail({
   const [currentContents, setContents] = useState(contents);
   const [otherPosition, setOtherPosition] = useState({});
   const textareaRef = useRef();
-  console.log("otherPosition", otherPosition);
 
   const titleSubmit = async (event) => {
     event.preventDefault();
@@ -56,23 +55,15 @@ export default function DocumentDetail({
   };
 
   const deleteDocument = async () => {
-    console.log("delete1");
     setLoading(true);
-    console.log("delete2");
     await axios.delete(documentUrl).catch((error) => console.error(error));
-    console.log("delete3");
-
     await onSetCurrentDocumentNone();
-    console.log("delete4");
-
     setLoading(false);
-    console.log("delete5");
   };
 
   const onChangeHandler = (event) => {
     setContents(event.target.value);
     const caret = getCaretCoordinates(event.target, event.target.selectionEnd);
-    console.log(caret);
 
     socket.emit(
       "position",

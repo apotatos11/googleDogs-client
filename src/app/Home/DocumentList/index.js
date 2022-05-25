@@ -15,6 +15,8 @@ export default function DocumentList({
   loginUserInfo,
 }) {
   const [myListMode, setMyListMode] = useState(false);
+  const [serarchKeyword, setSearchKeyword] = useState("");
+  console.log(serarchKeyword);
 
   const makeNewDocument = async () => {
     const uniqueId = nanoid();
@@ -54,15 +56,17 @@ export default function DocumentList({
 
   const documentList =
     documents.length > 0 ? (
-      documents.map((document) => (
-        <Document
-          key={document._id}
-          title={document.title}
-          id={document._id}
-          onSetCurrentDocument={onSetCurrentDocument}
-          lastModified={new Date(`${document.lastModified}`).toLocaleString()}
-        />
-      ))
+      documents
+        .filter((document) => document.title.includes(serarchKeyword))
+        .map((document) => (
+          <Document
+            key={document._id}
+            title={document.title}
+            id={document._id}
+            onSetCurrentDocument={onSetCurrentDocument}
+            lastModified={new Date(`${document.lastModified}`).toLocaleString()}
+          />
+        ))
     ) : (
       <p>현재 저장된 문서가 없습니다.</p>
     );
@@ -70,6 +74,7 @@ export default function DocumentList({
   const currentUserEmail = JSON.parse(
     localStorage.getItem("googleDogsLoingInfo")
   ).email;
+
   const myDocumentList = documents.filter(
     (document) => document.creator === currentUserEmail
   );
@@ -96,7 +101,15 @@ export default function DocumentList({
               내 문서
             </button>
           </nav>
-          <input type="search" placeholder=" 검색"></input>
+          <input
+            type="search"
+            placeholder="검색"
+            value={serarchKeyword}
+            onChange={(event) => {
+              console.log("hi");
+              setSearchKeyword(event.target.value);
+            }}
+          ></input>
           <button type="button" onClick={onLogout}>
             Logout
           </button>
@@ -116,7 +129,15 @@ export default function DocumentList({
               전체 문서
             </button>
           </nav>
-          <input type="search" placeholder=" 검색"></input>
+          <input
+            type="search"
+            placeholder="검색"
+            value={serarchKeyword}
+            onChange={(event) => {
+              console.log("hi");
+              setSearchKeyword(event.target.value);
+            }}
+          ></input>
           <button type="button" onClick={onLogout}>
             Logout
           </button>

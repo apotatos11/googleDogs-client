@@ -19,6 +19,7 @@ export default function Login({ auth, setLogin }) {
         <ul>
           <li>
             <button onClick={onLogin} name="Google">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/640px-Google_%22G%22_Logo.svg.png" />
               Login with Google
             </button>
           </li>
@@ -40,19 +41,38 @@ const LoginBox = styled.div`
   width: 20%;
   min-width: 250px;
   height: 50%;
-  border: 2px solid black;
-  border-radius: 5px;
-  background-color: orange;
+  border: 1px solid black;
+  background-color: greenyellow;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   h1 {
     font-size: 30px;
     margin: 10px;
+    width: 90%;
+    height: 20%;
+    text-align: center;
+    padding-top: 40px;
+  }
+
+  ul {
+    width: 90%;
+    height: 80%;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
   }
 
   button {
-    width: 150px;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
