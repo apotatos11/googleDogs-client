@@ -16,7 +16,6 @@ export default function DocumentList({
 }) {
   const [myListMode, setMyListMode] = useState(false);
   const [serarchKeyword, setSearchKeyword] = useState("");
-  console.log(serarchKeyword);
 
   const makeNewDocument = async () => {
     const uniqueId = nanoid();
@@ -57,6 +56,10 @@ export default function DocumentList({
   const documentList =
     documents.length > 0 ? (
       documents
+        .sort(
+          (a, b) =>
+            new Date(`${b.lastModified}`) - new Date(`${a.lastModified}`)
+        )
         .filter((document) => document.title.includes(serarchKeyword))
         .map((document) => (
           <Document
