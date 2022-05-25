@@ -6,12 +6,12 @@ import Login from "./Login";
 import Home from "./Home";
 
 export default function App({ auth }) {
-  const localStorageInfo = localStorage.getItem("googleDogsLoingInfo");
+  const localStorageInfo = localStorage.getItem("googleDogsLoginInfo");
   const [loginUserInfo, setLogin] = useState(localStorageInfo);
 
   const onLogout = async () => {
     try {
-      localStorage.removeItem("googleDogsLoingInfo");
+      localStorage.removeItem("googleDogsLoginInfo");
       await auth.logout().then(console.log);
       setLogin(null);
     } catch (error) {

@@ -21,7 +21,7 @@ export default function DocumentList({
     const uniqueId = nanoid();
 
     const localStorageInfo = JSON.parse(
-      localStorage.getItem("googleDogsLoingInfo")
+      localStorage.getItem("googleDogsLoginInfo")
     );
 
     const newDocument = {
@@ -75,7 +75,7 @@ export default function DocumentList({
     );
 
   const currentUserEmail = JSON.parse(
-    localStorage.getItem("googleDogsLoingInfo")
+    localStorage.getItem("googleDogsLoginInfo")
   ).email;
 
   const myDocumentList = documents.filter(

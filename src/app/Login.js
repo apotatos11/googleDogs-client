@@ -6,7 +6,7 @@ export default function Login({ auth, setLogin }) {
     const loginUser = await auth.login(e.target.name);
     const { id, email } = loginUser.additionalUserInfo.profile;
     await localStorage.setItem(
-      "googleDogsLoingInfo",
+      "googleDogsLoginInfo",
       JSON.stringify({ id, email })
     );
     setLogin({ id, email });

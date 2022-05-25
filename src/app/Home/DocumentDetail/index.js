@@ -17,7 +17,7 @@ export default function DocumentDetail({
   const documentId = currentDocument._id;
   const documentUrl = process.env.REACT_APP_DOCUMENT_DB_URL + documentId;
   const currentUserEmail = JSON.parse(
-    localStorage.getItem("googleDogsLoingInfo")
+    localStorage.getItem("googleDogsLoginInfo")
   ).email;
 
   const [currentTitle, setTitle] = useState(title);
