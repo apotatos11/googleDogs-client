@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+## GOOGLE DOGS 프로젝트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 작업물의 구조 설명(라우팅을 했다면 아래와 같은 구조였을겁니다.)
 
-## Available Scripts
+- Home
+  - DocumentList
+  - MyDocumentList
+  - DocumentDetail(/:id)
+- Login
 
-In the project directory, you can run:
+### 과제 관련 코멘트
 
-### `npm start`
+- 사용자 인증 및 로그인 정보는 firebase에서 관리합니다.
+- 문서에 관련된 정보는 MongoDB에서 관리합니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+(인증서버와 DB서버가 나눠져 있습니다.)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 과제중 하지 못한 부분
 
-### `npm test`
+- 문서별 URL 부여 실패
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  - 리액트 라우터 사용을 해본적이 없어 사용에 어려움을 겪었습니다.
+  - 결과적으로 처음 화면에서 로그인 여부에 따른 라우터 구성만 완료하였습니다.
 
-### `npm run build`
+- 이외에는 모든 요구 사항을 구현하였습니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 라이브러리 사용 관련 코멘트
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 커서위치를 자력으로 계산하는 로직 구성에 어려움을 겪어 "textarea-caret" npm 모듈을 이용하였습니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- axios를 한번도 사용해본적이 없어 이번에 일부러 사용하였습니다.
+- 정확하게 20초 간격으로 저장하는 기능을 구현하기 위해서 node-schedule을 사용하였습니다.
 
-### `npm run eject`
+### 환경 변수 내용 정리
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### .env.development
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+REACT_APP_FIREBASE_API_KEY=AIzaSyAD9l6l0h2J3NB-nSsMI9nshUaT0J-0aP0
+REACT_APP_FIREBASE_AUTH_DOMAIN=dogs-414ec.firebaseapp.com
+REACT_APP_FIREBASE_DB_URL=https://dogs-414ec.firebaseio.com
+REACT_APP_FIREBASE_PROJECT_ID=dogs-414ec
+REACT_APP_DOCUMENT_DB_URL=http://localhost:4000/api/document/
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### .env.production
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+REACT_APP_FIREBASE_API_KEY=AIzaSyAD9l6l0h2J3NB-nSsMI9nshUaT0J-0aP0
+REACT_APP_FIREBASE_AUTH_DOMAIN
+REACT_APP_FIREBASE_DB_URL
+REACT_APP_FIREBASE_PROJECT_ID=dogs-414ec
+REACT_APP_DOCUMENT_DB_URL=http://localhost:4000/api/document/
