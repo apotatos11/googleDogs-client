@@ -2,6 +2,8 @@ import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import schedule from "node-schedule";
+import { io } from "socket.io-client";
+const socket = io.connect("http://localhost:4000");
 
 export default function DocumentDetail({
   currentDocument,
@@ -20,6 +22,8 @@ export default function DocumentDetail({
 
   const [currentTitle, setTitle] = useState(title);
   const [currentContents, setContents] = useState(contents);
+  const [otherPosition, setOtherPosition] = useState({});
+  console.log("otherPosition", otherPosition);
 
   const titleSubmit = async (event) => {
     event.preventDefault();
@@ -62,6 +66,41 @@ export default function DocumentDetail({
     console.log("delete5");
   };
 
+  const onChangeHandler = (event) => {
+    setContents(event.target.value);
+    socket.emit(
+      "position",
+      documentId,
+      currentUserEmail,
+      event.target.selectionStart
+    );
+  };
+
+  const onClickHandler = (event) => {};
+
+  useEffect(() => {
+    const socket = io.connect("http://localhost:4000");
+    socket.emit("joinRoom", documentId, currentUserEmail);
+
+    socket.on("otherPosition", (msg) => {
+      const { userEmail, userPosition } = msg;
+      const newObject = {};
+      if (otherPosition[userEmail]) {
+        const revisedPosition = { ...otherPosition };
+        revisedPosition[userEmail] = userPosition;
+        setOtherPosition({ ...revisedPosition });
+      } else {
+        newObject[userEmail] = userPosition;
+        setOtherPosition({ ...otherPosition, ...newObject });
+      }
+    });
+
+    return () => {
+      socket.emit("leaveRoom", documentId, currentUserEmail);
+      socket.emit("forceDisconnect");
+    };
+  }, [otherPosition]);
+
   useEffect(() => {
     schedule.scheduleJob("0 * * * * *", function () {
       saveDocument();
@@ -76,7 +115,7 @@ export default function DocumentDetail({
     });
 
     return () => schedule.gracefulShutdown();
-  }, []);
+  }, [currentTitle, currentContents]);
 
   return (
     <Fragment>
@@ -108,11 +147,22 @@ export default function DocumentDetail({
         </div>
       </DocumentDetailHeader>
       <DocumentDetailMain>
-        <textarea
-          value={currentContents}
-          autoComplete="off"
-          onChange={(event) => setContents(event.target.value)}
-        />
+        <TextEditor>
+          <textarea
+            value={currentContents}
+            autoComplete="off"
+            onChange={onChangeHandler}
+            onClick={onClickHandler}
+          ></textarea>
+          {Object.keys(otherPosition)
+            .filter((element) => element !== currentUserEmail)
+            .map((element, index) => (
+              <CursorPointer key={index} position={otherPosition[element]}>
+                <div></div>
+                <p>{element}</p>
+              </CursorPointer>
+            ))}
+        </TextEditor>
       </DocumentDetailMain>
     </Fragment>
   );
@@ -153,21 +203,73 @@ const DocumentDetailMain = styled.main`
   height: 93%;
   display: flex;
   justify-content: center;
+`;
 
-  form {
-  }
+const TextEditor = styled.div`
+  margin: 10px;
+  width: 50%;
+  height: auto;
+  background-color: white;
+  position: relative;
 
   textarea {
-    margin: 10px;
-    width: 50%;
-    height: auto;
-    background-color: white;
+    width: 100%;
+    height: 100%;
     border: none;
     resize: none;
-    font-size: large;
+    font-size: 20px;
   }
 
   textarea:focus {
     outline: none;
+  }
+
+  textarea:nth-child(70) {
+    color: red;
+
+    animation: blink-effect 1s step-end infinite;
+
+    @keyframes blink-effect {
+      50% {
+        opacity: 0;
+      }
+    }
+  }
+`;
+
+const CursorPointer = styled.div`
+  --cursor-color: ${"#" + parseInt(Math.random() * 0xffffff).toString(16)};
+  position: absolute;
+  width: 4px;
+  height: 25px;
+  top: 0px;
+  left: ${(props) => props.position}px;
+
+  div {
+    width: 100%;
+    height: 100%;
+    background-color: var(--cursor-color);
+
+    animation: blink-effect 1s step-end infinite;
+
+    @keyframes blink-effect {
+      50% {
+        opacity: 0;
+      }
+    }
+  }
+
+  p {
+    position: absolute;
+    top: -15px;
+    background-color: var(--cursor-color);
+    color: white;
+    opacity: 0;
+  }
+
+  &:hover {
+    p {
+      opacity: 1;
+    }
   }
 `;
