@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-export default function Login({ auth, setLogin }) {
+export default function Login({ auth, setLoginUser, loginUserInfo }) {
   const onLogin = async (e) => {
     const loginUser = await auth.login(e.target.name);
     const { id, email } = loginUser.additionalUserInfo.profile;
@@ -9,7 +10,7 @@ export default function Login({ auth, setLogin }) {
       "googleDogsLoginInfo",
       JSON.stringify({ id, email })
     );
-    setLogin({ id, email });
+    setLoginUser({ id, email });
   };
 
   return (
@@ -19,7 +20,10 @@ export default function Login({ auth, setLogin }) {
         <ul>
           <li>
             <button onClick={onLogin} name="Google">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/640px-Google_%22G%22_Logo.svg.png" />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/640px-Google_%22G%22_Logo.svg.png"
+                alt="Google Logo"
+              />
               Login with Google
             </button>
           </li>
