@@ -1,8 +1,9 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import schedule from "node-schedule";
 import { io } from "socket.io-client";
+import getCaretCoordinates from "textarea-caret";
 const socket = io.connect("http://localhost:4000");
 
 export default function DocumentDetail({
@@ -23,6 +24,7 @@ export default function DocumentDetail({
   const [currentTitle, setTitle] = useState(title);
   const [currentContents, setContents] = useState(contents);
   const [otherPosition, setOtherPosition] = useState({});
+  const textareaRef = useRef();
   console.log("otherPosition", otherPosition);
 
   const titleSubmit = async (event) => {
@@ -50,6 +52,7 @@ export default function DocumentDetail({
     await axios
       .patch(documentUrl, updateInfo)
       .catch((error) => console.error(error));
+    setTitle(currentTitle);
   };
 
   const deleteDocument = async () => {
@@ -68,29 +71,31 @@ export default function DocumentDetail({
 
   const onChangeHandler = (event) => {
     setContents(event.target.value);
+    const caret = getCaretCoordinates(event.target, event.target.selectionEnd);
+    console.log(caret);
+
     socket.emit(
       "position",
       documentId,
       currentUserEmail,
-      event.target.selectionStart
+      event.target.selectionStart,
+      caret
     );
   };
-
-  const onClickHandler = (event) => {};
 
   useEffect(() => {
     const socket = io.connect("http://localhost:4000");
     socket.emit("joinRoom", documentId, currentUserEmail);
 
     socket.on("otherPosition", (msg) => {
-      const { userEmail, userPosition } = msg;
+      const { userEmail, caret } = msg;
       const newObject = {};
       if (otherPosition[userEmail]) {
         const revisedPosition = { ...otherPosition };
-        revisedPosition[userEmail] = userPosition;
+        revisedPosition[userEmail] = caret;
         setOtherPosition({ ...revisedPosition });
       } else {
-        newObject[userEmail] = userPosition;
+        newObject[userEmail] = caret;
         setOtherPosition({ ...otherPosition, ...newObject });
       }
     });
@@ -149,10 +154,10 @@ export default function DocumentDetail({
       <DocumentDetailMain>
         <TextEditor>
           <textarea
+            ref={textareaRef}
             value={currentContents}
             autoComplete="off"
             onChange={onChangeHandler}
-            onClick={onClickHandler}
           ></textarea>
           {Object.keys(otherPosition)
             .filter((element) => element !== currentUserEmail)
@@ -242,8 +247,8 @@ const CursorPointer = styled.div`
   position: absolute;
   width: 4px;
   height: 25px;
-  top: 0px;
-  left: ${(props) => props.position}px;
+  top: ${(props) => props.position.top}px;
+  left: ${(props) => props.position.left}px;
 
   div {
     width: 100%;
